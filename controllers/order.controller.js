@@ -11,16 +11,20 @@ exports.create = (req, res) => {
 
 // Create an order
 const order = new Order({
-  firstName: req.body.firstName,
-  lastName: req.body.lastName,
-  appointmentDate: req.body.appointmentDate,
-  instaId: req.body.instaId,
-  appointmentType: req.body.appointmentType
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    contact: req.body.contact,
+    address: req.body.address,
+    appointmentPlace: req.body.appointmentPlace,
+    appointmentDate: req.body.appointmentDate,
+    instaId: req.body.instaId,
+    appointmentType: req.body.appointmentType
 });
 
 // Save order in the database
 order.save()
 .then(data => {
+    console.log(data);
     res.send(data);
 }).catch(err => {
     res.status(500).send({
@@ -74,11 +78,14 @@ exports.update = (req, res) => {
 
 // Find order and update it with the request body
 Order.findByIdAndUpdate(req.params.orderId, {
-  firstName: req.body.firstName,
-  lastName: req.body.lastName,
-  appointmentDate: req.body.appointmentDate,
-  instaId: req.body.instaId,
-  appointmentType: req.body.appointmentType
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    contact: req.body.contact,
+    address: req.body.address,
+    appointmentPlace: req.body.appointmentPlace,
+    appointmentDate: req.body.appointmentDate,
+    instaId: req.body.instaId,
+    appointmentType: req.body.appointmentType
 }, {new: true})
 .then(order => {
     if(!order) {
@@ -121,3 +128,14 @@ exports.delete = (req, res) => {
       });
   });
 };
+
+exports.excel = (req,res) => {
+    Order.find()
+    .then(orders => {
+        res.send(orders);
+    }).catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving orders."
+        });
+    });
+}
